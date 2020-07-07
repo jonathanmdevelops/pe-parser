@@ -67,7 +67,7 @@ int _tmain(int argc, _TCHAR* argv[])
     std::cout << "File:" << '\t' << pszFilePath << std::endl;
     std::cout << "Size:" << '\t' << nNumberOfBytesRead << " bytes" << std::endl;
 
-    piDosHeader = (PIMAGE_DOS_HEADER)lpFileContent;
+    piDosHeader = static_cast<PIMAGE_DOS_HEADER>(lpFileContent);
 
     if (piDosHeader->e_magic != IMAGE_DOS_SIGNATURE)
     {
@@ -96,7 +96,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	printf("%-40s 0x%x\n", "OEM information; e_oemid specific", piDosHeader->e_oeminfo);
 	printf("%-40s 0x%x\n", "File address of NT header", piDosHeader->e_lfanew);
 
-	piNtHeaders = (IMAGE_NT_HEADERS*)((PBYTE)lpFileContent + piDosHeader->e_lfanew);
+	piNtHeaders = reinterpret_cast<PIMAGE_NT_HEADERS>((static_cast<PBYTE>(lpFileContent) + piDosHeader->e_lfanew));
 
 	if (piNtHeaders->Signature != IMAGE_NT_SIGNATURE)
 	{
@@ -182,7 +182,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		printf("%-40s 0x%x\n", "Number Of Line Numbers", piSectionHeader->NumberOfLinenumbers);
 		printf("%-40s 0x%x\n", "Characteristics", piSectionHeader->Characteristics);
 
-		piSectionHeader = (PIMAGE_SECTION_HEADER) ((PBYTE)piSectionHeader + sizeof(IMAGE_SECTION_HEADER));
+		piSectionHeader = reinterpret_cast<PIMAGE_SECTION_HEADER>((reinterpret_cast<PBYTE>(piSectionHeader) + sizeof(IMAGE_SECTION_HEADER)));
 	}
 
     HeapFree(GetProcessHeap(), NULL, lpFileContent);
