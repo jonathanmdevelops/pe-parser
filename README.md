@@ -1,6 +1,6 @@
 # PeParser
 
-A minimal x64 PE Parser for Windows, written in C++.
+A minimal PE Parser for Windows, written in C++.
 
 ## Usage
 ```
